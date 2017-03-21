@@ -1,8 +1,4 @@
-{% extends 'layout.html' %}
-
-{% block title %}Your Trip{% endblock %}
-
-{% block content %}
+{% extends 'layout.html' %} {% block title %}Your Trip{% endblock %} {% block content %}
 <div id="app" class="clearfix">
   <div class="map-container col-sm-8 col-lg-9">
     <div>
@@ -16,26 +12,26 @@
           <div>
             <h4>Hotels</h4>
             <select data-type="hotel" id="hotel-choices">
-              <option>Andaz Wall Street</option>
-              <option>...</option>
+              <!--  <option>Andaz Wall Street</option>
+              <option>...</option> -->
             </select>
-            <button data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
+            <button data-action="add" class="btn btn-primary btn-circle pull-right" id="hotel_btn">+</button>
           </div>
           <div>
             <h4>Restaurants</h4>
             <select data-type="restaurant" id="restaurant-choices">
-              <option>Bouley</option>
-              <option>...</option>
+              <!--    <option>Bouley</option>
+              <option>...</option> -->
             </select>
-            <button data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
+            <button data-action="add" class="btn btn-primary btn-circle pull-right" id="restaurant_btn">+</button>
           </div>
           <div>
             <h4>Activities</h4>
             <select data-type="activity" id="activity-choices">
-              <option>Mahayana Buddhist Temple Association</option>
-              <option>...</option>
+              <!--   <option>Mahayana Buddhist Temple Association</option>
+              <option>...</option> -->
             </select>
-            <button data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
+            <button data-action="add" class="btn btn-primary btn-circle pull-right" id="activity_btn">+</button>
           </div>
         </div>
       </div>
@@ -43,44 +39,42 @@
     <div class="col-xs-6 col-sm-12">
       <h3>
         <span id="day-title">
-          <span>Day 2</span>
+          <span id="dayDisplay">Day 1</span>
           <button class="btn btn-xs btn-danger remove btn-circle">x</button>
         </span>
       </h3>
-      <div class="panel panel-default">
+      <div class="panel panel-default" id='jonathan'>
         <div class="panel-heading">
           <div class="day-buttons">
-            <button class="btn btn-circle day-btn">1</button>
-            <button class="btn btn-circle day-btn current-day">2</button>
-            <button class="btn btn-circle day-btn">3</button>
-            <button class="btn btn-circle day-btn" id="day-add">+</button>
+            <button class="btn btn-circle day-btn current-day">1</button>
+            <button class="btn btn-circle" id="day-add">+</button>
           </div>
         </div>
         <div class="panel-body" id="itinerary">
           <div>
             <h4>My Hotel</h4>
             <ul class="list-group">
-              <div class="itinerary-item">
-                <span class="title">Andaz Wall Street</span>
-                <button class="btn btn-xs btn-danger remove btn-circle">x</button>
+              <div class="itinerary-item" id="hotelItenerary">
+                <!-- <span class="title">Andaz Wall Street</span>
+                <button class="btn btn-xs btn-danger remove btn-circle">x</button> -->
               </div>
             </ul>
           </div>
           <div>
             <h4>My Restaurants</h4>
             <ul class="list-group">
-              <div class="itinerary-item">
-                <span class="title">Bouley</span>
-                <button class="btn btn-xs btn-danger remove btn-circle">x</button>
+              <div class="itinerary-item" id="restaurantItenerary">
+                <!-- <span class="title">Bouley</span>
+                <button class="btn btn-xs btn-danger remove btn-circle">x</button> -->
               </div>
             </ul>
           </div>
           <div>
             <h4>My Activities</h4>
             <ul class="list-group">
-              <div class="itinerary-item">
-                <span class="title">Mahayana Buddhist Temple Association</span>
-                <button class="btn btn-xs btn-danger remove btn-circle">x</button>
+              <div class="itinerary-item" id= "activityItenerary">
+                <!-- <span class="title">Mahayana Buddhist Temple Association</span>
+                <button class="btn btn-xs btn-danger remove btn-circle">x</button> -->
               </div>
             </ul>
           </div>
@@ -89,4 +83,200 @@
     </div>
   </div>
 </div>
+<script>
+  var hotels = {{ hotels | dump | safe }};
+  var restaurants = {{ restaurants | dump | safe }};
+  var activities = {{ activities | dump | safe }};
+  var counter = 2;
+  var storedIntenerary= { 'Day 1': {
+    hotels: [],
+    restaurants: [],
+    activities: []
+    }
+  };
+
+  $('<option/>', {
+    text: 'Select'
+  }).appendTo($('#hotel-choices'))
+
+  $('<option/>', {
+    text: 'Select'
+  }).appendTo($('#restaurant-choices'))
+
+  $('<option/>', {
+    text: 'Select'
+  }).appendTo($('#activity-choices'))
+
+  for (let i = 0; i < hotels.length; i++) {
+    $('<option/>', {
+      text: hotels[i].name
+    }).appendTo($('#hotel-choices'))
+  }
+
+  for (let i = 0; i < restaurants.length; i++) {
+    $('<option/>', {
+      text: restaurants[i].name
+    }).appendTo($('#restaurant-choices'))
+  }
+
+  for (let i = 0; i < activities.length; i++) {
+    $('<option/>', {
+      text: activities[i].name
+    }).appendTo($('#activity-choices'))
+  }
+
+  $('#hotel_btn').click(function() {
+    for (var i=0;i<hotels.length;i++){
+      if (hotels[i].name===$('#hotel-choices').val()){
+        let place = hotels[i].place.address;
+        storedIntenerary[$("#dayDisplay").text()].hotels.push(place)
+
+        $('<span/>', {
+          text: hotels[i].name,
+          class: 'title'
+        }).appendTo($('#hotelItenerary'))
+        $('<button/>', {
+          class: "btn btn-xs btn-danger remove btn-circle jonah"
+        }).appendTo($('#hotelItenerary'))
+      }
+    }
+  })
+
+  $('#restaurant_btn').click(function() {
+    for (var i=0;i<restaurants.length;i++){
+      if (restaurants[i].name===$('#restaurant-choices').val()){
+        let place = restaurants[i].place.address;
+
+        storedIntenerary[$("#dayDisplay").text()].restaurants.push(place)
+
+        $('<span/>', {
+          text: restaurants[i].name,
+          class: 'title'
+        }).appendTo($('#restaurantItenerary'))
+        $('<button/>', {
+          class: "btn btn-xs btn-danger remove btn-circle jonah"
+        }).appendTo($('#restaurantItenerary'))
+      }
+    }
+  })
+  $('#activity_btn').click(function() {
+    for (var i=0;i<activities.length;i++){
+      if (activities[i].name===$('#activity-choices').val()){
+        let place = activities[i].place.address;
+
+        storedIntenerary[$("#dayDisplay").text()].activities.push(place)
+
+        $('<span/>', {
+          text: activities[i].name,
+          class: 'title'
+        }).appendTo($('#activityItenerary'))
+        $('<button/>', {
+          class: "btn btn-xs btn-danger remove btn-circle jonah"
+        }).appendTo($('#activityItenerary'))
+      }
+    }
+  })
+
+  $("#day-add").on("click",function(){
+    $(this).before($('<button class="btn btn-circle day-btn">'+counter +'</button>'))
+    storedIntenerary['Day ' + counter++] = {
+      hotels: [],
+      restaurants: [],
+      activities: []
+    }
+  })
+
+  $(".itinerary-item").on("click",".remove",function(e){
+    $(this).prev().remove()
+    $(this).remove()
+  })
+
+  $('.day-buttons').on('click', '.day-btn', function() {
+    $('.current-day').removeClass('current-day')
+    $(this).addClass('current-day')
+    $("#dayDisplay").text("Day "+this.innerHTML)
+    $('#itinerary').remove()
+
+    let itinerary = $('<div/>', {
+      id: 'itinerary',
+      class: 'panel-body'
+    })
+
+    let hotelDiv = $('<div/>')
+    let restaurantDiv = $('<div/>')
+    let activityDiv = $('<div/>')
+
+    let hotelTag = $('<h4>My Hotel</h4>')
+    let restaurantTag = $('<h4>My Restaurant</h4>')
+    let activityTag = $('<h4>My Activity</h4>')
+
+    let hotelList = $('<ul/>', {
+      class: 'list-group'
+    })
+    let restaurantList = $('<ul/>', {
+      class: 'list-group'
+    })
+    let activityList = $('<ul/>', {
+      class: 'list-group'
+    })
+
+    let hotelItinerary = $('<div/>', {
+      class: 'itinerary-item',
+      id: 'hotelItenerary'
+    })
+    let restaurantItinerary = $('<div/>', {
+      class: 'itinerary-item',
+      id: 'restaurantItenerary'
+    })
+    let activityItinerary = $('<div/>', {
+      class: 'itinerary-item',
+      id: 'activityItenerary'
+    })
+
+    itinerary.appendTo($('#jonathan'))
+    hotelDiv.appendTo(itinerary)
+    restaurantDiv.appendTo(itinerary)
+    activityDiv.appendTo(itinerary)
+    hotelTag.appendTo(hotelDiv)
+    hotelList.appendTo(hotelDiv)
+    restaurantTag.appendTo(restaurantDiv)
+    restaurantList.appendTo(restaurantDiv)
+    activityTag.appendTo(activityDiv)
+    activityList.appendTo(activityDiv)
+    hotelItinerary.appendTo(hotelList)
+    restaurantItinerary.appendTo(restaurantList)
+    activityItinerary.appendTo(activityList)
+
+    for (var i = 0; i < storedIntenerary[$("#dayDisplay").text()]["hotels"].length; i++){
+      $('<span/>', {
+        text: storedIntenerary[$("#dayDisplay").text()]["hotels"][i],
+        class: 'title'
+      }).appendTo($('#hotelItenerary'))
+      $('<button/>', {
+        class: "btn btn-xs btn-danger remove btn-circle jonah"
+      }).appendTo($('#hotelItenerary'))
+    }
+
+    for (var i = 0; i < storedIntenerary[$("#dayDisplay").text()]["restaurants"].length; i++){
+      $('<span/>', {
+        text: storedIntenerary[$("#dayDisplay").text()]["restaurants"][i],
+        class: 'title'
+      }).appendTo($('#restaurantItenerary'))
+      $('<button/>', {
+        class: "btn btn-xs btn-danger remove btn-circle jonah"
+      }).appendTo($('#restaurantItenerary'))
+    }
+
+    for (var i = 0; i < storedIntenerary[$("#dayDisplay").text()]["activities"].length; i++){
+      $('<span/>', {
+        text: storedIntenerary[$("#dayDisplay").text()]["activities"][i],
+        class: 'title'
+      }).appendTo($('#activityItenerary'))
+      $('<button/>', {
+        class: "btn btn-xs btn-danger remove btn-circle jonah"
+      }).appendTo($('#activityItenerary'))
+    }
+})
+
+</script>
 {% endblock %}
